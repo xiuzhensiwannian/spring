@@ -1,9 +1,9 @@
-package cn.bugstack.springframework.test;
+package cn.tzq.spring.test;
 
 
+import cn.tzq.spring.test.bean.UserService;
 import com.tzq.spring.beans.factory.config.BeanDefinition;
 import com.tzq.spring.beans.factory.support.DefaultListableBeanFactory;
-import cn.bugstack.springframework.test.bean.UserService;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 import org.junit.Test;
@@ -11,12 +11,8 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
- * 公众号：bugstack虫洞栈
- * Create by 小傅哥(fustack)
- */
-public class ApiTest {
+
+public class BeanTest {
 
     @Test
     public void test_BeanFactory() {
