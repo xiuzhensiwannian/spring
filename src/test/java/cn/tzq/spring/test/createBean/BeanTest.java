@@ -1,4 +1,4 @@
-package cn.tzq.spring.test;
+package cn.tzq.spring.test.createBean;
 
 
 import cn.tzq.spring.test.bean.UserService;

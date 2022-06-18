@@ -1,4 +1,4 @@
-package cn.tzq.spring.test;
+package cn.tzq.spring.test.createBean;
 
 import cn.hutool.core.io.IoUtil;
 import cn.tzq.spring.test.bean.UserDao;
