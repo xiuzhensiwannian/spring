@@ -1,6 +1,8 @@
 package cn.tzq.spring.test.bean;
 
 import cn.hutool.json.JSONUtil;
+import com.tzq.spring.beans.factory.DisposableBean;
+import com.tzq.spring.beans.factory.InitializingBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserService {
+public class UserService implements InitializingBean, DisposableBean {
 
     private String name;
 
@@ -27,13 +29,22 @@ public class UserService {
     }
 
     public String queryUserInfo() {
-        System.out.println("查询用户信息：" + name);
-        return name;
+        return userDao.queryUserName(uId) + "," + company + "," + location;
     }
 
     public String queryUserInfo(String uid) {
         this.setName(userDao.queryUserName(uId));
         return JSONUtil.toJsonStr(this);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("执行：UserService.destroy");
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("执行：UserService.afterPropertiesSet");
     }
 
 }

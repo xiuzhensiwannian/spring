@@ -4,13 +4,17 @@ import cn.hutool.core.bean.BeanUtil;
 import com.tzq.spring.beans.BeansException;
 import com.tzq.spring.beans.PropertyValue;
 import com.tzq.spring.beans.PropertyValues;
+import com.tzq.spring.beans.factory.DisposableBean;
+import com.tzq.spring.beans.factory.InitializingBean;
 import com.tzq.spring.beans.factory.config.AutowireCapableBeanFactory;
 import com.tzq.spring.beans.factory.config.BeanDefinition;
 import com.tzq.spring.beans.factory.config.BeanPostProcessor;
 import com.tzq.spring.beans.factory.config.BeanReference;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 @Data
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
@@ -22,12 +26,18 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) throws BeansException {
         Object bean = null;
         try {
+            // 创建bean
             bean = createBeanInstance(beanDefinition, beanName, args);
+            // 给 Bean 填充属性
             applyPropertyValues(beanName, bean, beanDefinition);
+            //  执行 Bean 的初始化方法和 BeanPostProcessor 的前置和后置处理方法
             bean = initializeBean(beanName, bean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
+
+        // 注册实现了 DisposableBean 接口的 Bean 对象
+        registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
 
         addSingleton(beanName, bean);
         return bean;
@@ -64,12 +74,37 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
     private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
+        // 1. 执行 BeanPostProcessor Before 处理
         Object warppedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
 
+        // 执行初始化方法
+        try {
+            invokeInitMethods(beanName, warppedBean, beanDefinition);
+        } catch (Exception e) {
+            throw new BeansException("Invocation of init method of bean[" + beanName + "]");
+        }
+
+        // 3. 执行 BeanPostProcessor After 处理
         warppedBean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
         return warppedBean;
     }
 
+    private void invokeInitMethods(String beanName, Object bean, BeanDefinition beanDefinition) throws Exception {
+        // 实现InitializingBean接口
+        if (bean instanceof InitializingBean) {
+            ((InitializingBean)bean).afterPropertiesSet();
+        }
+
+        // xml配置initMethodName
+        String initMethodName = beanDefinition.getInitMethodName();
+        if (StringUtils.isNotBlank(initMethodName)) {
+            Method initMethod = bean.getClass().getMethod(initMethodName);
+            if (initMethod == null) {
+                throw new BeansException("Could not find an init method named '" + initMethodName + "' on bean with name '" + beanName + "'");
+            }
+            initMethod.invoke(bean);
+        }
+    }
 
     @Override
     public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException {
@@ -92,6 +127,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             result = current;
         }
         return result;
+    }
+
+    protected void registerDisposableBeanIfNecessary(String beanName, Object bean, BeanDefinition beanDefinition) {
+        if (bean instanceof DisposableBean || StringUtils.isNotBlank(beanDefinition.getDestroyMethodName())) {
+            registerDisposableBean(beanName, new DisposableBeanAdapter(bean, beanName, beanDefinition));
+        }
     }
 
 }
