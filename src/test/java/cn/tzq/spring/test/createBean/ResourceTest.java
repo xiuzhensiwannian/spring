@@ -1,8 +1,8 @@
 package cn.tzq.spring.test.createBean;
 
 import cn.hutool.core.io.IoUtil;
-import cn.tzq.spring.test.bean.UserDao;
-import cn.tzq.spring.test.bean.UserService;
+import cn.tzq.spring.test.UserDao;
+import cn.tzq.spring.test.UserService;
 import com.tzq.spring.beans.PropertyValue;
 import com.tzq.spring.beans.PropertyValues;
 import com.tzq.spring.beans.factory.config.BeanDefinition;

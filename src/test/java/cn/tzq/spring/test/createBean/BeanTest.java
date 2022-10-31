@@ -1,7 +1,7 @@
 package cn.tzq.spring.test.createBean;
 
 
-import cn.tzq.spring.test.bean.UserService;
+import cn.tzq.spring.test.UserService;
 import com.tzq.spring.beans.factory.config.BeanDefinition;
 import com.tzq.spring.beans.factory.support.DefaultListableBeanFactory;
 import net.sf.cglib.proxy.Enhancer;

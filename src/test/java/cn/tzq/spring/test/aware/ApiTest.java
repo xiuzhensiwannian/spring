@@ -1,10 +1,15 @@
-package cn.tzq.spring.test.initMethod;
+package cn.tzq.spring.test.aware;
+
 
 import cn.tzq.spring.test.UserService;
 import com.tzq.spring.context.support.ClassPathXmlApplicationContext;
 import org.junit.Test;
 
-
+/**
+ * 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
+ * 公众号：bugstack虫洞栈
+ * Create by 小傅哥(fustack)
+ */
 public class ApiTest {
 
     @Test
@@ -17,10 +22,10 @@ public class ApiTest {
         UserService userService = applicationContext.getBean("userService", UserService.class);
         String result = userService.queryUserInfo();
         System.out.println("测试结果：" + result);
+
+        System.out.println("ApplicationContextAware：" + userService.getApplicationContext());
+        System.out.println("BeanFactoryAware：" + userService.getBeanFactory());
+
     }
 
-    @Test
-    public void test_hook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("close！")));
-    }
 }

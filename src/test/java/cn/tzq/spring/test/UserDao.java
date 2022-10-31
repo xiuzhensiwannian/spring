@@ -1,4 +1,4 @@
-package cn.tzq.spring.test.bean;
+package cn.tzq.spring.test;
 
 import lombok.Data;
 

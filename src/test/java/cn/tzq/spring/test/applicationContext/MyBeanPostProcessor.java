@@ -1,7 +1,7 @@
 package cn.tzq.spring.test.applicationContext;
 
 
-import cn.tzq.spring.test.bean.UserService;
+import cn.tzq.spring.test.UserService;
 import com.tzq.spring.beans.BeansException;
 import com.tzq.spring.beans.factory.config.BeanPostProcessor;
 

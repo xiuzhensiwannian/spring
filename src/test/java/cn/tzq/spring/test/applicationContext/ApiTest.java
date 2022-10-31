@@ -1,7 +1,7 @@
 package cn.tzq.spring.test.applicationContext;
 
 
-import cn.tzq.spring.test.bean.UserService;
+import cn.tzq.spring.test.UserService;
 import com.tzq.spring.beans.factory.support.DefaultListableBeanFactory;
 import com.tzq.spring.beans.factory.xml.XmlBeanDefinitionReader;
 import com.tzq.spring.context.support.ClassPathXmlApplicationContext;
