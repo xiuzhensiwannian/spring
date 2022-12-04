@@ -6,11 +6,13 @@ import com.tzq.spring.beans.factory.*;
 import com.tzq.spring.context.ApplicationContext;
 import com.tzq.spring.context.ApplicationContextAware;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserService implements InitializingBean, DisposableBean, BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
@@ -19,7 +21,7 @@ public class UserService implements InitializingBean, DisposableBean, BeanNameAw
 
     private String uId;
 
-    private UserDao userDao;
+    private IUserDao userDao;
 
     private String company;
 
@@ -43,35 +45,29 @@ public class UserService implements InitializingBean, DisposableBean, BeanNameAw
         return JSONUtil.toJsonStr(this);
     }
 
-    @Override
     public void destroy() throws Exception {
         System.out.println("执行：UserService.destroy");
     }
 
-    @Override
     public void afterPropertiesSet() throws Exception {
         System.out.println("执行：UserService.afterPropertiesSet");
     }
 
 
-    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         System.out.println("执行 setBeanFactory");
         this.beanFactory = beanFactory;
     }
 
-    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         System.out.println("执行 setApplicationContext");
         this.applicationContext = applicationContext;
     }
 
-    @Override
     public void setBeanName(String name) {
         System.out.println("Bean Name is：" + name);
     }
 
-    @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
         System.out.println("ClassLoader：" + classLoader);
     }
