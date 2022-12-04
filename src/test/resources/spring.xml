@@ -11,4 +11,8 @@
 
     <bean id="proxyUserDao" class="cn.tzq.spring.test.factoryBean.ProxyBeanFactory"/>
 
+    <bean class="cn.tzq.spring.test.event.ContextRefreshedEventListener"/>
+    <bean class="cn.tzq.spring.test.event.CustomEventListener"/>
+    <bean class="cn.tzq.spring.test.event.ContextClosedEventListener"/>
+
 </beans>
