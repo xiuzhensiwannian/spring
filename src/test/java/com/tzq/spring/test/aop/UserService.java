@@ -1,11 +1,14 @@
 package com.tzq.spring.test.aop;
 
+import com.tzq.spring.stereotype.Component;
 import com.tzq.spring.test.IUserService;
 
 import java.util.Random;
 
-
+@Component("userService")
 public class UserService implements IUserService {
+
+    private String token;
 
     public String queryUserInfo() {
         try {
@@ -23,6 +26,18 @@ public class UserService implements IUserService {
             e.printStackTrace();
         }
         return "注册用户：" + userName + " success！";
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String toString() {
+        return "token = " + token;
     }
 
 }
