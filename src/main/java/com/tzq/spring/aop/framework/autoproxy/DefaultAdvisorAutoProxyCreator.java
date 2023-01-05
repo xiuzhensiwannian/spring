@@ -4,6 +4,7 @@ import com.tzq.spring.aop.*;
 import com.tzq.spring.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import com.tzq.spring.aop.framework.ProxyFactory;
 import com.tzq.spring.beans.BeansException;
+import com.tzq.spring.beans.PropertyValues;
 import com.tzq.spring.beans.factory.BeanFactory;
 import com.tzq.spring.beans.factory.BeanFactoryAware;
 import com.tzq.spring.beans.factory.config.InstantiationAwareBeanPostProcessor;
@@ -29,13 +30,9 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        return null;
-    }
-
-    @Override
-    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+        Class<?> beanClass = bean.getClass();
         if (isInfrastructureClass(beanClass)) {
-            return null;
+            return bean;
         }
         Collection<AspectJExpressionPointcutAdvisor> advisors = beanFactory.getBeansOfType(AspectJExpressionPointcutAdvisor.class).values();
         for (AspectJExpressionPointcutAdvisor advisor : advisors) {
@@ -43,22 +40,27 @@ public class DefaultAdvisorAutoProxyCreator implements InstantiationAwareBeanPos
             if (!classFilter.matches(beanClass)) continue;
 
             AdvisedSupport advisedSupport = new AdvisedSupport();
-            TargetSource targetSource = null;
-            try {
-                targetSource = new TargetSource(beanClass.getDeclaredConstructor().newInstance());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            TargetSource targetSource = new TargetSource(bean);
             advisedSupport.setTargetSource(targetSource);
             advisedSupport.setMethodInterceptor((MethodInterceptor)advisor.getAdvice());
             advisedSupport.setMethodMatcher(advisor.getPointcut().getMethodMatcher());
             advisedSupport.setProxyTargetClass(false);
             return new ProxyFactory(advisedSupport).getProxy();
         }
+        return bean;
+    }
+
+    @Override
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
         return null;
     }
 
     private boolean isInfrastructureClass(Class<?> beanClass) {
         return Advice.class.isAssignableFrom(beanClass) || Pointcut.class.isAssignableFrom(beanClass) || Advisor.class.isAssignableFrom(beanClass);
+    }
+
+    @Override
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) throws BeansException {
+        return pvs;
     }
 }

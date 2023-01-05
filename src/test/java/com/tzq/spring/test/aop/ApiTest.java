@@ -20,7 +20,7 @@ public class ApiTest {
 
     @Test
     public void test_aop() throws NoSuchMethodException {
-        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut("execution(* cn.tzq.spring.test.UserService.*(..))");
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut("execution(* com.tzq.spring.test.UserService.*(..))");
 
         Class<UserService> clazz = UserService.class;
         Method method = clazz.getDeclaredMethod("queryUserInfo");
@@ -37,7 +37,7 @@ public class ApiTest {
         AdvisedSupport advisedSupport = new AdvisedSupport();
         advisedSupport.setTargetSource(new TargetSource(userService));
         advisedSupport.setMethodInterceptor(new UserServiceInterceptor());
-        advisedSupport.setMethodMatcher(new AspectJExpressionPointcut("execution(* cn.tzq.spring.test.IUserService.*(..))"));
+        advisedSupport.setMethodMatcher(new AspectJExpressionPointcut("execution(* com.tzq.spring.test.IUserService.*(..))"));
 
         // 代理对象(JdkDynamicAopProxy)
         IUserService proxy_jdk = (IUserService)new JdkDynamicAopProxy(advisedSupport).getProxy();
@@ -66,7 +66,7 @@ public class ApiTest {
         // AOP 代理
         IUserService proxy = (IUserService)Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), targetObj.getClass().getInterfaces(), new InvocationHandler() {
             // 方法匹配器
-            MethodMatcher methodMatcher = new AspectJExpressionPointcut("execution(* cn.tzq.spring.test.IUserService.*(..))");
+            MethodMatcher methodMatcher = new AspectJExpressionPointcut("execution(* com.tzq.spring.test.IUserService.*(..))");
 
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
